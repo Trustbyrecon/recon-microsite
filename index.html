@@ -1,51 +1,50 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Recon.AI – Under Construction</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    .container {
-      position: relative;
-      width: 100vw;
-      height: 100vh;
-      background: black;
-    }
-    .background-image {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto;
-    }
-    .message {
-      position: absolute;
-      bottom: 2rem;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(6px);
-      color: white;
-      padding: 1rem 2rem;
-      border-radius: 10px;
-      font-size: 1.4rem;
-      font-weight: bold;
-      text-align: center;
-      max-width: 90%;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recon.AI</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+        .pulse-dot {
+            margin-top: 50px;
+            width: 20px;
+            height: 20px;
+            background-color: #00aaff;
+            border-radius: 50%;
+            box-shadow: 0 0 0 rgba(0, 170, 255, 0.7);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 170, 255, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 20px rgba(0, 170, 255, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 170, 255, 0);
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <img src="reconai-gate-rescaled.png" alt="Recon.AI Gate" class="background-image">
-    <div class="message">We're planting something powerful. Recon.AI is under construction.</div>
-  </div>
+    <h1>Recon.AI</h1>
+    <p>Recon.AI is not just launching — it’s learning.</p>
+    <p>Real-time intelligence begins here.</p>
+    <p>Trust builds from the first frame.</p>
+    <div class="pulse-dot"></div>
 </body>
 </html>
