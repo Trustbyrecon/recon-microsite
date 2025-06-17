@@ -96,6 +96,37 @@
 
       <input type="submit" value="Send Signal" />
     </form>
+    <form onsubmit="handleIntake(event)">
+...
+</form>
+
+<script src="reflex-core.js"></script>
+<script>
+  function handleIntake(event) {
+    event.preventDefault(); // stop real form post (for demo/test)
+
+    const name = document.getElementById("name").value;
+    const role = document.getElementById("role").value;
+    const confidence = Math.random() * 0.4 + 0.6; // simulate confidence
+
+    const score = ReflexEngine.evaluate({
+      agent: name,
+      input: { role, confidence }
+    });
+
+    TrustGraphSync.updateScore(name, score);
+    GhostLogTrail.log({
+      event: "score_submitted",
+      agent: name,
+      role,
+      reflex_score: score,
+      timestamp: new Date().toISOString()
+    });
+
+    alert(`Reflex score for ${name}: ${Math.round(score * 100)}%`);
+  }
+</script>
+
   </div>
 </body>
 </html>
