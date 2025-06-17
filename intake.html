@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reflex Intake</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background-color: #000;
+      color: #00ffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #111;
+      padding: 30px;
+      border: 1px solid #00ffff44;
+      box-shadow: 0 0 20px #00ffff44;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffff;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #00ffffaa;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: #fff;
+      font-family: monospace;
+    }
+
+    input[type="submit"] {
+      background: #00ffff;
+      color: #000;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background: #00dddd;
+    }
+
+    .pulse-ring {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,255,255, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(0,255,255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,255,255, 0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container pulse-ring">
+    <h2>Reflex Intake Form</h2>
+    <form action="https://formspree.io/f/mwkgrzrk" method="POST">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="role">Role</label>
+      <select id="role" name="role">
+        <option>Builder</option>
+        <option>Observer</option>
+        <option>Partner</option>
+        <option>Unknown</option>
+      </select>
+
+      <label for="message">Why are you here?</label>
+      <textarea id="message" name="message" rows="4"></textarea>
+
+      <input type="submit" value="Send Signal" />
+    </form>
+  </div>
+</body>
+</html>
