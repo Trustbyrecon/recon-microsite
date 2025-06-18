@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mission Assignment UI – Recon.AI</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: monospace;
+    }
+    .mission-card {
+      border: 1px solid #334155;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background-color: #1e293b;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <h1 class="text-3xl mb-6 text-cyan-400 font-bold">Mission Assignment Console</h1>
+
+  <div id="missionList">
+    <div class="mission-card">
+      <h2 class="text-xl text-green-300">Mission: Echo Sync Loop</h2>
+      <p>Tier: 4 | Status: Active</p>
+      <label for="agent1" class="block mt-2">Assign Agent:</label>
+      <select id="agent1" class="bg-gray-800 text-white p-2 rounded">
+        <option>Alie</option>
+        <option>Observer-01</option>
+        <option>PulseRunner</option>
+      </select>
+      <button class="bg-cyan-500 hover:bg-cyan-400 text-black px-4 py-1 mt-2 rounded">Assign</button>
+    </div>
+
+    <div class="mission-card">
+      <h2 class="text-xl text-yellow-300">Mission: Trust Drift Stabilization</h2>
+      <p>Tier: 5 | Status: Standby</p>
+      <label for="agent2" class="block mt-2">Assign Agent:</label>
+      <select id="agent2" class="bg-gray-800 text-white p-2 rounded">
+        <option>DeltaEye</option>
+        <option>GridFlow</option>
+        <option>Alie</option>
+      </select>
+      <button class="bg-yellow-400 hover:bg-yellow-300 text-black px-4 py-1 mt-2 rounded">Assign</button>
+    </div>
+  </div>
+</body>
+</html>
