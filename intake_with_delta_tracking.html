@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reflex Intake</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background-color: #000;
+      color: #00ffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .form-container {
+      background: #111;
+      padding: 30px;
+      border: 1px solid #00ffff44;
+      box-shadow: 0 0 20px #00ffff44;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 420px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #00ffff;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #00ffffaa;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+      background: #222;
+      color: #fff;
+      font-family: monospace;
+    }
+
+    input[type="submit"] {
+      background: #00ffff;
+      color: #000;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    input[type="submit"]:hover {
+      background: #00dddd;
+    }
+
+    .pulse-ring {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,255,255, 0.4); }
+      70% { box-shadow: 0 0 0 15px rgba(0,255,255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0,255,255, 0); }
+    }
+
+    .reflex-preview {
+      margin-top: 20px;
+      text-align: center;
+      color: #00ffaa;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .trust-badge {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #00ff88;
+    }
+
+    .timeline {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 420px;
+      background: #111;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px #00ffff44;
+      overflow-y: auto;
+      max-height: 300px;
+    }
+
+    .log-entry {
+      margin-bottom: 10px;
+      padding: 10px;
+      border-bottom: 1px solid #00ffff22;
+      color: #ccffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container pulse-ring">
+    <h2>Reflex Intake Form</h2>
+    <form onsubmit="handleIntake(event)">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required />
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="role">Role</label>
+      <select id="role" name="role">
+        <option>Builder</option>
+        <option>Observer</option>
+        <option>Partner</option>
+        <option>Unknown</option>
+      </select>
+
+      <label for="message">Why are you here?</label>
+      <textarea id="message" name="message" rows="4"></textarea>
+
+      <input type="submit" value="Send Signal" />
+    </form>
+    <div class="reflex-preview" id="previewScore"></div>
+    <div class="trust-badge" id="trustBadge"></div>
+  </div>
+
+  <div class="timeline" id="timelineLog"></div>
+
+  <script src="reflex-core.js"></script>
+<script>
+let agentMemory = {};
+
+function getDelta(agent, newScore) {
+  const oldScore = agentMemory[agent] || null;
+  agentMemory[agent] = newScore;
+
+  if (oldScore === null) return "🟢 First Entry";
+  const delta = Math.round((newScore - oldScore) * 100);
+  if (delta === 0) return "🟡 No Change";
+  if (delta > 0) return `🟢 Up ${delta}%`;
+  return `🔴 Down ${Math.abs(delta)}%`;
+}
+</script>
+  <script>
+    const memoryLog = [];
+
+    function getTrustBadge(score) {
+      if (score >= 0.9) return "🟢 Trusted Builder";
+      if (score >= 0.75) return "🔵 Solid Signal";
+      if (score >= 0.6) return "🟠 Unclear Agent";
+      return "🔴 Trust Pending";
+    }
+
+    async function handleIntake(event) {
+      event.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const role = document.getElementById("role").value;
+      const message = document.getElementById("message").value;
+      const confidence = Math.random() * 0.4 + 0.6;
+
+      const score = ReflexEngine.evaluate({
+        agent: name,
+        input: { role, confidence }
+      });
+
+      TrustGraphSync.updateScore(name, score);
+      GhostLogTrail.log({
+        event: "score_submitted",
+        agent: name,
+        role,
+        reflex_score: score,
+        timestamp: new Date().toISOString()
+      });
+
+      const badge = getTrustBadge(score);
+      document.getElementById("previewScore").innerText = `🧠 Reflex Score: ${Math.round(score * 100)}%`;
+      document.getElementById("trustBadge").innerText = badge;
+
+      // Memory append
+      const memory = {
+        agent: name,
+        role,
+        score,
+        badge,
+        timestamp: new Date().toISOString()
+      };
+      memoryLog.push(memory);
+
+      const log = document.createElement("div");
+      log.className = "log-entry";
+      log.innerText = `${memory.timestamp}: ${memory.agent} (${memory.role}) → ${badge}`;
+      log.innerText += ` — ${getDelta(name, score)}`;
+      document.getElementById("timelineLog").prepend(log);
+
+      // Formspree POST
+      const formspreeURL = "https://formspree.io/f/mldnljog";
+      try {
+        await fetch(formspreeURL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, role, message })
+        });
+      } catch (err) {
+        console.error("Formspree error:", err);
+      }
+    }
+  </script>
+</body>
+</html>

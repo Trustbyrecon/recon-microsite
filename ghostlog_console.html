@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GhostLog Console</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #00ffff;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 960px;
+      background-color: #111;
+      color: #fff;
+    }
+
+    th, td {
+      border: 1px solid #00ffff55;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #00ffff33;
+    }
+
+    tr:hover {
+      background-color: #00ffff11;
+    }
+  </style>
+</head>
+<body>
+  <h1>GhostLog Console</h1>
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Agent</th>
+        <th>Role</th>
+        <th>Event</th>
+        <th>Reflex Score</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadLog() {
+      const res = await fetch('ghostlog.json');
+      const data = await res.json();
+      const tbody = document.querySelector("#logTable tbody");
+
+      data.forEach(entry => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${entry.agent}</td>
+          <td>${entry.role}</td>
+          <td>${entry.event}</td>
+          <td>${Math.round(entry.reflex_score * 100)}%</td>
+          <td>${new Date(entry.timestamp).toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    loadLog();
+  </script>
+</body>
+</html>

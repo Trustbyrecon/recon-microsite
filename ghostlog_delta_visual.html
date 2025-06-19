@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GhostLog Delta Visualizer</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #00ffff;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 90%;
+      max-width: 960px;
+      background-color: #111;
+      color: #fff;
+    }
+
+    th, td {
+      border: 1px solid #00ffff55;
+      padding: 10px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #00ffff33;
+    }
+
+    tr:hover {
+      background-color: #00ffff11;
+    }
+
+    .delta-high {
+      color: #ff4444;
+    }
+
+    .delta-mid {
+      color: #ffff00;
+    }
+
+    .delta-low {
+      color: #00ff88;
+    }
+  </style>
+</head>
+<body>
+  <h1>GhostLog Delta Visualizer</h1>
+  <table id="deltaTable">
+    <thead>
+      <tr>
+        <th>Agent</th>
+        <th>Score</th>
+        <th>Previous</th>
+        <th>Δ</th>
+        <th>Event</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadAndVisualize() {
+      const res = await fetch("ghostlog.json");
+      const log = await res.json();
+      const tbody = document.querySelector("#deltaTable tbody");
+
+      // Group entries by agent
+      const agentMap = {};
+      log.forEach(entry => {
+        const key = entry.agent;
+        if (!agentMap[key]) agentMap[key] = [];
+        agentMap[key].push(entry);
+      });
+
+      // Sort and compare scores
+      Object.entries(agentMap).forEach(([agent, entries]) => {
+        entries.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+        let prevScore = null;
+
+        entries.forEach(entry => {
+          const delta = prevScore !== null ? entry.reflex_score - prevScore : 0;
+          const deltaAbs = Math.abs(delta);
+          let deltaClass = "delta-low";
+          if (deltaAbs >= 0.2) deltaClass = "delta-high";
+          else if (deltaAbs >= 0.1) deltaClass = "delta-mid";
+
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${entry.agent}</td>
+            <td>${(entry.reflex_score * 100).toFixed(1)}%</td>
+            <td>${prevScore !== null ? (prevScore * 100).toFixed(1) + "%" : "–"}</td>
+            <td class="${deltaClass}">${delta !== 0 ? (delta > 0 ? "+" : "") + (delta * 100).toFixed(1) + "%" : "–"}</td>
+            <td>${entry.event}</td>
+            <td>${new Date(entry.timestamp).toLocaleString()}</td>
+          `;
+          tbody.appendChild(row);
+          prevScore = entry.reflex_score;
+        });
+      });
+    }
+
+    loadAndVisualize();
+  </script>
+</body>
+</html>

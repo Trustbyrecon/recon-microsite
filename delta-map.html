@@ -1,0 +1,61 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trust Delta Map</title>
+  <style>
+    body {
+      background: #000;
+      color: #00ffff;
+      font-family: monospace;
+      text-align: center;
+      padding: 20px;
+    }
+    canvas {
+      border: 1px solid #00ffff44;
+      background-color: #111;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Reflex Delta Heatmap</h2>
+  <canvas id="deltaCanvas" width="420" height="300"></canvas>
+
+  <script>
+    const ctx = document.getElementById('deltaCanvas').getContext('2d');
+    const boxSize = 40;
+    const data = [
+      { agent: 'Noor', deltas: [12, -4, 5] },
+      { agent: 'Dre', deltas: [-10, 0, 6] },
+      { agent: 'Kai', deltas: [0, 0, 0] },
+      { agent: 'Yuki', deltas: [22] }
+    ];
+
+    function drawHeatmap() {
+      data.forEach((entry, row) => {
+        entry.deltas.forEach((delta, col) => {
+          let color = '#555';
+          if (delta > 0) color = '#00ff88';
+          else if (delta < 0) color = '#ff3355';
+          else if (delta === 0) color = '#999';
+
+          ctx.fillStyle = color;
+          ctx.fillRect(col * boxSize, row * boxSize, boxSize - 4, boxSize - 4);
+
+          ctx.fillStyle = "#fff";
+          ctx.font = "10px monospace";
+          ctx.fillText(`${delta >= 0 ? '+' : ''}${delta}`, col * boxSize + 10, row * boxSize + 25);
+        });
+
+        ctx.fillStyle = "#00ffff";
+        ctx.fillText(entry.agent, data[0].deltas.length * boxSize + 10, row * boxSize + 25);
+      });
+    }
+
+    drawHeatmap();
+  </script>
+</body>
+</html>

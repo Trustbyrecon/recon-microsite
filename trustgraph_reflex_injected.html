@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>TrustGraph + Reflex SDK</title>
+  <style>
+    body {
+      margin: 0;
+      background-color: #000;
+      color: #00ffff;
+      font-family: monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    h1 {
+      margin: 20px 0;
+    }
+    canvas {
+      border: 1px solid #00ffff;
+      background-color: #111;
+    }
+  </style>
+</head>
+<body>
+  <h1>TrustGraph Live + Reflex Engine</h1>
+  <canvas id="trustGraph" width="800" height="500"></canvas>
+
+  <script src="reflex-core.js"></script>
+  <script>
+    async function loadIntakeData() {
+      const response = await fetch('intake-log.json');
+      return response.json();
+    }
+
+    function getColor(score) {
+      if (score >= 0.85) return "#00ff88";
+      if (score >= 0.6) return "#ffff00";
+      return "#ff4444";
+    }
+
+    function drawGraph(data) {
+      const canvas = document.getElementById("trustGraph");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = 180;
+      const angleStep = (2 * Math.PI) / data.length;
+
+      data.forEach((entry, i) => {
+        const angle = i * angleStep;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+
+        // Inject reflex score calculation (override if logic dictates)
+        const calculatedScore = ReflexEngine.evaluate({
+          agent: entry.name,
+          input: { role: entry.role, confidence: entry.score }
+        });
+
+        // Sync and log via SDK
+        TrustGraphSync.updateScore(entry.name, calculatedScore);
+        GhostLogTrail.log({
+          event: "score_displayed",
+          agent: entry.name,
+          role: entry.role,
+          reflex_score: calculatedScore,
+          timestamp: new Date().toISOString()
+        });
+
+        // Draw node
+        ctx.beginPath();
+        ctx.arc(x, y, 18, 0, 2 * Math.PI);
+        ctx.fillStyle = getColor(calculatedScore);
+        ctx.fill();
+
+        // Draw label
+        ctx.fillStyle = "#fff";
+        ctx.font = "12px monospace";
+        ctx.fillText(`${entry.name}`, x + 20, y - 4);
+        ctx.fillText(`(${entry.role}, ${Math.round(calculatedScore * 100)}%)`, x + 20, y + 10);
+      });
+    }
+
+    loadIntakeData().then(drawGraph);
+  </script>
+</body>
+</html>
