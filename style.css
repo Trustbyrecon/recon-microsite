@@ -1,0 +1,11 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background: #101010;
+    color: #ffffff;
+    padding: 2rem;
+}
+#reflex-score, #trust-tier {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}

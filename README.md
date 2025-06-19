@@ -1,2 +1,7 @@
-# recon-microsite
-Landing page for Recon.AI
+# Reflex SDK Core v0.1
+
+Modules:
+- ReflexScorer
+- GhostLog
+- SignalEcho
+- RetryLoop
