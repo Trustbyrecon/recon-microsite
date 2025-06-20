@@ -1,49 +1,81 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Recon.AI Microsite Landing</title>
-    <style>
-        body {
-            background-color: #111;
-            color: #f4f4f4;
-            font-family: Arial, sans-serif;
-            padding: 2rem;
-        }
-        h1 {
-            color: #00f6ff;
-            font-size: 2.2rem;
-            margin-bottom: 1rem;
-        }
-        ul {
-            list-style-type: none;
-            padding-left: 0;
-        }
-        li {
-            margin-bottom: 1rem;
-        }
-        a {
-            color: #8fd;
-            font-size: 1.2rem;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Recon.AI – Whisper Entry</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: radial-gradient(ellipse at center, #000000 0%, #111111 100%);
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .whisper-container {
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+
+    .whisper-circle {
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #888;
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      animation: pulse 3s infinite ease-in-out;
+    }
+
+    h1 {
+      font-size: 2em;
+      letter-spacing: 1.5px;
+    }
+
+    p {
+      font-size: 1em;
+      max-width: 500px;
+      margin: 0 auto;
+      color: #aaa;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2);
+      }
+      70% {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.05);
+      }
+      100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
-    <h1>🧭 Recon.AI Microsite Navigation</h1>
-    <ul>
-        <li><a href="CampaignPulse.html">📡 Campaign Pulse</a></li>
-        <li><a href="MissionAssignment.html">🎯 Mission Assignment</a></li>
-        <li><a href="trustgraph_live.html">🧬 TrustGraph (Live)</a></li>
-        <li><a href="ghostlog_console.html">👁️ GhostLog Console</a></li>
-        <li><a href="intake_with_preview_final.html">🌀 Reflex Intake (Final Preview)</a></li>
-        <li><a href="RevenueAnomaly.html">📊 Revenue Anomaly Report</a></li>
-        <li><a href="home.html">🏠 Legacy Homepage</a></li>
-    </ul>
-    <p><em>Trust Manifesto withheld – pending final tuning.</em></p>
+  <div class="whisper-container">
+    <div class="whisper-circle"></div>
+    <h1>Recon.AI</h1>
+    <p>Begin in silence. Let the system listen before you speak.</p>
+  </div>
 </body>
 </html>
